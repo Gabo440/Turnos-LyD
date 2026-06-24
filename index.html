@@ -349,6 +349,7 @@ body {
 .tchip-1   { background: var(--t1bg);  color: var(--t1);  border: 1px solid var(--t1bd); }
 .tchip-11  { background: var(--t11bg); color: var(--t11); border: 1px solid var(--t11bd); }
 .tchip-13  { background: var(--t13bg); color: var(--t13); border: 1px solid var(--t13bd); }
+.tchip-14  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
 .tchip-fijo { background: #f9fafb; color: var(--text2); border: 1px solid var(--border2); }
 
 /* WEEK COLUMNS header */
@@ -490,6 +491,7 @@ select option { background: #fff; }
 .colab-turno-11 { background: var(--t11bg); border-left-color: var(--t11); }
 .colab-turno-13 { background: var(--t13bg); border-left-color: var(--t13); }
 .colab-turno-fijo { background: var(--panel2); border-left-color: var(--border2); }
+.colab-turno-14  { background: #f0fdf4; border-left-color: #166534; }
 .colab-tid   { font-size: 1.8rem; font-weight: 900; line-height: 1; }
 .colab-hor   { font-family: 'IBM Plex Mono',monospace; font-size: 0.85rem; color: var(--text2); margin-top: 4px; }
 .colab-dias  { font-size: 0.75rem; color: var(--text2); margin-top: 6px; }
@@ -1026,6 +1028,60 @@ html, body {
   </div>
 </div>
 
+<!-- MODAL: Gestionar Turnos -->
+<div class="modal-back" id="modal-turnos-manager">
+  <div class="modal" style="width:480px">
+    <h3>🕐 Turnos del sistema</h3>
+    <div class="modal-body">
+      <p style="font-size:0.82rem;color:var(--text2);margin-bottom:14px;line-height:1.5">
+        Los turnos base (T1, T11, T13) son fijos del sistema. Aquí puedes agregar turnos adicionales que aparecerán en el selector al crear o editar empleados fijos.
+      </p>
+
+      <!-- Turnos base (solo lectura) -->
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);padding:6px 0 4px">Turnos base</div>
+      <div style="border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:14px">
+        <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700">T1</span><span style="color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:0.85rem">08:00 a 17:00</span>
+          <span style="font-size:0.65rem;color:var(--text3);background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:1px 6px">BASE</span>
+        </div>
+        <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700">T11</span><span style="color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:0.85rem">08:30 a 17:30</span>
+          <span style="font-size:0.65rem;color:var(--text3);background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:1px 6px">BASE</span>
+        </div>
+        <div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:700">T13</span><span style="color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:0.85rem">07:30 a 16:30</span>
+          <span style="font-size:0.65rem;color:var(--text3);background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:1px 6px">BASE</span>
+        </div>
+      </div>
+
+      <!-- Turnos personalizados -->
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text2);padding:6px 0 4px">Turnos adicionales</div>
+      <div id="turnos-manager-list" style="border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:14px"></div>
+
+      <!-- Formulario agregar turno -->
+      <div style="background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:14px">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:10px">Agregar nuevo turno</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
+          <div>
+            <label style="font-size:0.72rem;color:var(--text2);font-weight:600;display:block;margin-bottom:4px">ID del turno</label>
+            <input id="t-id" type="number" min="1" max="99" placeholder="ej: 14"
+              style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:7px;border:1px solid var(--border2);background:var(--panel);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.95rem;outline:none">
+          </div>
+          <div>
+            <label style="font-size:0.72rem;color:var(--text2);font-weight:600;display:block;margin-bottom:4px">Horario</label>
+            <input id="t-hor" type="text" placeholder="ej: 08:00 a 17:30"
+              style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:7px;border:1px solid var(--border2);background:var(--panel);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:0.9rem;outline:none">
+          </div>
+          <button class="btn btn-guardar-usuario" onclick="saveTurnoPersonalizado()" style="padding:8px 14px;white-space:nowrap">+ Agregar</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-turnos-manager')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: Gestionar Roles -->
 <div class="modal-back" id="modal-roles-manager">
   <div class="modal" style="width:500px">
@@ -1278,6 +1334,7 @@ html, body {
           <option value="1">1 — 08:00 a 17:00</option>
           <option value="11">11 — 08:30 a 17:30</option>
           <option value="13">13 — 07:30 a 16:30</option>
+          <option value="14">14 — 08:00 a 17:30</option>
         </select>
       </div>
       <div class="form-group" id="f-ciclo-group" style="grid-column:1/-1;display:none">
@@ -1673,6 +1730,7 @@ html, body {
       <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
         <button class="btn btn-guardar-usuario" onclick="openAddUsuario()">+ Agregar usuario</button>
         <button class="btn btn-ghost" onclick="openRolesManager()">⚙ Gestionar roles</button>
+        <button class="btn btn-ghost" onclick="openTurnosManager()">🕐 Gestionar turnos</button>
         <div style="flex:1"></div>
         <input type="text" id="search-usuarios" placeholder="Buscar usuario…" style="width:200px" oninput="renderUsuarios()">
       </div>
@@ -1704,6 +1762,7 @@ const SHIFTS = {
   1:  { id: 1,  hor: '08:00 a 17:00' },
   11: { id: 11, hor: '08:30 a 17:30' },
   13: { id: 13, hor: '07:30 a 16:30' },
+  14: { id: 14, hor: '08:00 a 17:30' },
 };
 // Semanas efectivas: detecta dinámicamente si el mes tiene 4 o 5 lunes hábiles
 function getEffectiveWeeks(year, month) {
@@ -1742,6 +1801,7 @@ let state = {
   snapshots: [],
   changelog: [],
   rolesPersonalizados: [], // [{ id, nombre, permisos:{...}, descripcion }]
+  turnosPersonalizados: [], // [{ id, hor }] — turnos adicionales creados desde la plataforma
   usuarios: [
     { id: 1, nombre: 'jperez',      pin: '3225',     rol: 'supervisor',    empId: null, permisos: {}, grupo: [] },
     { id: 2, nombre: 'gseguel',     pin: '1234',     rol: 'administrador', empId: null, permisos: {}, grupo: [] },
@@ -2818,13 +2878,16 @@ window.__firebaseReady = async function(snap) {
     if (data.snapshots)           state.snapshots           = data.snapshots;
     if (data.changelog)           state.changelog           = data.changelog;
     if (data.usuarios)            state.usuarios            = data.usuarios;
-    if (data.rolesPersonalizados) state.rolesPersonalizados = data.rolesPersonalizados;
+    if (data.rolesPersonalizados)  state.rolesPersonalizados  = data.rolesPersonalizados;
+    if (data.turnosPersonalizados) state.turnosPersonalizados = data.turnosPersonalizados;
     // Ensure default users exist
     // Usuarios gestionados completamente desde Firebase — sin seeding automático
   } else {
     await pushToFirestore();
   }
   startRealtimeListener();
+  // Load custom turnos into SHIFTS object
+  state.turnosPersonalizados.forEach(t => { SHIFTS[t.id] = { id: t.id, hor: t.hor }; });
   setSyncStatus('synced');
   // Mark as loaded and re-validate login
   firebaseLoaded = true;
@@ -2856,12 +2919,15 @@ function startRealtimeListener() {
         if (data.snapshots)           state.snapshots           = data.snapshots;
         if (data.changelog)           state.changelog           = data.changelog;
         if (data.usuarios)            state.usuarios            = data.usuarios;
-        if (data.rolesPersonalizados) state.rolesPersonalizados = data.rolesPersonalizados;
+        if (data.rolesPersonalizados)  state.rolesPersonalizados  = data.rolesPersonalizados;
+        if (data.turnosPersonalizados) state.turnosPersonalizados = data.turnosPersonalizados;
 
         const changed =
           JSON.stringify(state.employees)           !== wasEmployees ||
           JSON.stringify(state.usuarios)            !== wasUsuarios  ||
           JSON.stringify(state.rolesPersonalizados) !== wasRoles;
+        // Reload custom turnos into SHIFTS
+        state.turnosPersonalizados.forEach(t => { SHIFTS[t.id] = { id: t.id, hor: t.hor }; });
 
         if (changed) {
           renderAll();
@@ -2884,6 +2950,7 @@ async function pushToFirestore() {
       changelog:            state.changelog,
       usuarios:             state.usuarios,
       rolesPersonalizados:  state.rolesPersonalizados,
+      turnosPersonalizados: state.turnosPersonalizados,
       updatedAt:            new Date().toISOString()
     });
     setSyncStatus('synced');
@@ -3393,6 +3460,80 @@ function guardarCambioPin() {
   }
   closeModal('modal-cambiar-pin');
   toast('✅ PIN actualizado correctamente', 'success');
+}
+
+// ── GESTIÓN DE TURNOS ────────────────────────────────────
+function openTurnosManager() {
+  renderTurnosManager();
+  openModal('modal-turnos-manager');
+}
+
+function renderTurnosManager() {
+  const container = document.getElementById('turnos-manager-list');
+  if (!container) return;
+  if (!state.turnosPersonalizados.length) {
+    container.innerHTML = `<div style="text-align:center;color:var(--text3);padding:16px;font-size:0.82rem">
+      No hay turnos adicionales. Agrega uno con el formulario de abajo.</div>`;
+    return;
+  }
+  container.innerHTML = state.turnosPersonalizados.map(t => `
+    <div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-weight:700">T${t.id}</span>
+      <span style="color:var(--text2);font-family:'IBM Plex Mono',monospace;font-size:0.85rem">${t.hor}</span>
+      <button class="btn btn-danger btn-sm" onclick="deleteTurnoPersonalizado(${t.id})">🗑</button>
+    </div>`).join('');
+}
+
+function saveTurnoPersonalizado() {
+  const id  = parseInt(document.getElementById('t-id').value);
+  const hor = document.getElementById('t-hor').value.trim();
+  if (!id || id < 1 || id > 99) { toast('⚠️ Ingresa un ID válido (1-99)', 'warn'); return; }
+  if (!hor) { toast('⚠️ Ingresa el horario', 'warn'); return; }
+  // Check no duplicates with base or existing
+  const baseIds = [1, 11, 13];
+  if (baseIds.includes(id)) { toast('⚠️ Ese ID ya existe en los turnos base', 'warn'); return; }
+  if (state.turnosPersonalizados.some(t => t.id === id)) { toast('⚠️ Ya existe un turno con ese ID', 'warn'); return; }
+
+  state.turnosPersonalizados.push({ id, hor });
+  // Also update SHIFTS in memory so it works immediately
+  SHIFTS[id] = { id, hor };
+  pushToFirestore();
+  refreshTurnoSelector();
+  renderTurnosManager();
+  document.getElementById('t-id').value  = '';
+  document.getElementById('t-hor').value = '';
+  toast(`✅ Turno T${id} agregado`, 'success');
+}
+
+function deleteTurnoPersonalizado(id) {
+  // Check if any employee uses this turno
+  const inUse = state.employees.some(e => e.turnoFijo === id);
+  if (inUse) { toast('⚠️ Este turno está asignado a uno o más empleados', 'warn'); return; }
+  if (!confirm(`¿Eliminar el Turno ${id}?`)) return;
+  state.turnosPersonalizados = state.turnosPersonalizados.filter(t => t.id !== id);
+  delete SHIFTS[id];
+  pushToFirestore();
+  refreshTurnoSelector();
+  renderTurnosManager();
+  toast(`🗑 Turno ${id} eliminado`, 'warn');
+}
+
+function refreshTurnoSelector() {
+  const sel = document.getElementById('f-turnofijo');
+  if (!sel) return;
+  const curVal = sel.value;
+  // Remove custom options (keep base ones)
+  Array.from(sel.options).forEach(opt => {
+    if (!['1','11','13'].includes(opt.value)) opt.remove();
+  });
+  // Add custom turnos
+  state.turnosPersonalizados.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = `${t.id} — ${t.hor}`;
+    sel.appendChild(opt);
+  });
+  if (curVal) sel.value = curVal;
 }
 
 // ── GESTIÓN DE ROLES PERSONALIZADOS ──────────────────────
