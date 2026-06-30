@@ -729,6 +729,22 @@ select option { background: #fff; }
 .daily-day-col.today .daily-day-name { color: #fff; }
 .daily-day-col.today .daily-day-date { color: rgba(255,255,255,0.6); }
 
+/* Feriado — solo visible para Administrador */
+.daily-day-col.is-feriado .daily-day-head {
+  background: linear-gradient(135deg, #fef2f2, #fee2e2);
+  border-bottom: 2px solid #dc2626;
+}
+.daily-day-col.is-feriado.today .daily-day-head {
+  background: linear-gradient(135deg, #7f1d1d, #991b1b);
+}
+.daily-day-feriado {
+  font-size: 0.62rem; font-weight: 700; color: #b91c1c;
+  margin-top: 3px; line-height: 1.3;
+}
+.daily-day-col.is-feriado.today .daily-day-feriado {
+  color: #fecaca;
+}
+
 /* Semana selector tabs */
 .week-tabs {
   display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
@@ -1764,6 +1780,99 @@ const SHIFTS = {
   13: { id: 13, hor: '07:30 a 16:30' },
   14: { id: 14, hor: '08:00 a 17:30' },
 };
+
+// ── FERIADOS LEGALES DE CHILE (2026–2030) ──
+// Solo visibles para el rol Administrador. Lista fija, no editable desde la plataforma.
+const FERIADOS_CHILE = {
+  // 2026
+  '2026-01-01': 'Año Nuevo',
+  '2026-04-03': 'Viernes Santo',
+  '2026-04-04': 'Sábado Santo',
+  '2026-05-01': 'Día del Trabajo',
+  '2026-05-21': 'Día de las Glorias Navales',
+  '2026-06-29': 'San Pedro y San Pablo',
+  '2026-07-16': 'Día de la Virgen del Carmen',
+  '2026-08-15': 'Asunción de la Virgen',
+  '2026-09-18': 'Independencia Nacional',
+  '2026-09-19': 'Glorias del Ejército',
+  '2026-10-12': 'Encuentro de Dos Mundos',
+  '2026-10-31': 'Día de las Iglesias Evangélicas y Protestantes',
+  '2026-11-01': 'Día de Todos los Santos',
+  '2026-12-08': 'Inmaculada Concepción',
+  '2026-12-25': 'Navidad',
+  // 2027
+  '2027-01-01': 'Año Nuevo',
+  '2027-03-26': 'Viernes Santo',
+  '2027-03-27': 'Sábado Santo',
+  '2027-05-01': 'Día del Trabajo',
+  '2027-05-21': 'Día de las Glorias Navales',
+  '2027-06-29': 'San Pedro y San Pablo',
+  '2027-07-16': 'Día de la Virgen del Carmen',
+  '2027-08-15': 'Asunción de la Virgen',
+  '2027-09-18': 'Independencia Nacional',
+  '2027-09-19': 'Glorias del Ejército',
+  '2027-10-12': 'Encuentro de Dos Mundos',
+  '2027-10-31': 'Día de las Iglesias Evangélicas y Protestantes',
+  '2027-11-01': 'Día de Todos los Santos',
+  '2027-12-08': 'Inmaculada Concepción',
+  '2027-12-25': 'Navidad',
+  // 2028
+  '2028-01-01': 'Año Nuevo',
+  '2028-04-14': 'Viernes Santo',
+  '2028-04-15': 'Sábado Santo',
+  '2028-05-01': 'Día del Trabajo',
+  '2028-05-21': 'Día de las Glorias Navales',
+  '2028-06-29': 'San Pedro y San Pablo',
+  '2028-07-16': 'Día de la Virgen del Carmen',
+  '2028-08-15': 'Asunción de la Virgen',
+  '2028-09-18': 'Independencia Nacional',
+  '2028-09-19': 'Glorias del Ejército',
+  '2028-10-12': 'Encuentro de Dos Mundos',
+  '2028-10-31': 'Día de las Iglesias Evangélicas y Protestantes',
+  '2028-11-01': 'Día de Todos los Santos',
+  '2028-12-08': 'Inmaculada Concepción',
+  '2028-12-25': 'Navidad',
+  // 2029
+  '2029-01-01': 'Año Nuevo',
+  '2029-03-30': 'Viernes Santo',
+  '2029-03-31': 'Sábado Santo',
+  '2029-05-01': 'Día del Trabajo',
+  '2029-05-21': 'Día de las Glorias Navales',
+  '2029-06-29': 'San Pedro y San Pablo',
+  '2029-07-16': 'Día de la Virgen del Carmen',
+  '2029-08-15': 'Asunción de la Virgen',
+  '2029-09-18': 'Independencia Nacional',
+  '2029-09-19': 'Glorias del Ejército',
+  '2029-10-12': 'Encuentro de Dos Mundos',
+  '2029-10-31': 'Día de las Iglesias Evangélicas y Protestantes',
+  '2029-11-01': 'Día de Todos los Santos',
+  '2029-12-08': 'Inmaculada Concepción',
+  '2029-12-25': 'Navidad',
+  // 2030
+  '2030-01-01': 'Año Nuevo',
+  '2030-04-19': 'Viernes Santo',
+  '2030-04-20': 'Sábado Santo',
+  '2030-05-01': 'Día del Trabajo',
+  '2030-05-21': 'Día de las Glorias Navales',
+  '2030-06-29': 'San Pedro y San Pablo',
+  '2030-07-16': 'Día de la Virgen del Carmen',
+  '2030-08-15': 'Asunción de la Virgen',
+  '2030-09-18': 'Independencia Nacional',
+  '2030-09-19': 'Glorias del Ejército',
+  '2030-10-12': 'Encuentro de Dos Mundos',
+  '2030-10-31': 'Día de las Iglesias Evangélicas y Protestantes',
+  '2030-11-01': 'Día de Todos los Santos',
+  '2030-12-08': 'Inmaculada Concepción',
+  '2030-12-25': 'Navidad',
+};
+
+function getFeriado(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return FERIADOS_CHILE[`${y}-${m}-${d}`] || null;
+}
+
 // Semanas efectivas: detecta dinámicamente si el mes tiene 4 o 5 lunes hábiles
 function getEffectiveWeeks(year, month) {
   // Contar cuántos lunes caen dentro del mes
@@ -2075,6 +2184,13 @@ function renderDailyDetail() {
       const isToday = date.getTime() === today.getTime();
       const dateStr = date.toLocaleDateString('es-CL', { day:'2-digit', month:'2-digit' });
 
+      // Feriados — solo visibles para el Administrador
+      const esAdmin = currentUsuario && currentUsuario.rol === 'administrador';
+      const feriadoNombre = esAdmin ? getFeriado(date) : null;
+      const feriadoBadge = feriadoNombre
+        ? `<div class="daily-day-feriado" title="Feriado legal">🇨🇱 ${feriadoNombre}</div>`
+        : '';
+
       // Build employee rows for this day (all rotativos have same turno all week)
       let empRows = '';
       rotativos.forEach(emp => {
@@ -2088,10 +2204,11 @@ function renderDailyDetail() {
         </div>`;
       });
 
-      html += `<div class="daily-day-col${isToday?' today':''}">
+      html += `<div class="daily-day-col${isToday?' today':''}${feriadoNombre?' is-feriado':''}">
         <div class="daily-day-head">
           <div class="daily-day-name">${DIAS[di]}</div>
           <div class="daily-day-date">${dateStr}</div>
+          ${feriadoBadge}
         </div>
         <div class="daily-day-body">${empRows}</div>
       </div>`;
