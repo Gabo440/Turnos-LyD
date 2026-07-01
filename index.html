@@ -1178,6 +1178,18 @@ html, body {
   </div>
 </div>
 
+<!-- MODAL: Feriados -->
+<div class="modal-back" id="modal-feriados">
+  <div class="modal" style="width:520px">
+    <h3>🇨🇱 Feriados Legales Chile 2026–2030</h3>
+    <div class="modal-body" id="feriados-modal-body">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-feriados')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: Cambiar mi PIN -->
 <div class="modal-back" id="modal-cambiar-pin">
   <div class="modal" style="width:400px">
@@ -1495,6 +1507,9 @@ html, body {
     <button class="mpanel-btn" id="mpanel-cambiar-pin" style="display:none" onclick="openCambiarPin();closeMobilePanel()">
       <span class="mpanel-icon">🔑</span> Cambiar mi PIN
     </button>
+    <button class="mpanel-btn" id="mpanel-feriados" style="display:none" onclick="openFeriados();closeMobilePanel()">
+      <span class="mpanel-icon">🇨🇱</span> Feriados
+    </button>
 
     <div class="mpanel-divider"></div>
 
@@ -1569,6 +1584,9 @@ html, body {
       </button>
       <button class="nav-item" id="nav-cambiar-pin" style="display:none" onclick="openCambiarPin()">
         <span class="ni">🔑</span> Cambiar mi PIN
+      </button>
+      <button class="nav-item" id="nav-feriados" style="display:none" onclick="openFeriados()">
+        <span class="ni">🇨🇱</span> Feriados
       </button>
     </div>
 
@@ -3318,6 +3336,11 @@ function applyPermisos() {
   const mpPin  = document.getElementById('mpanel-cambiar-pin');
   if (navPin) navPin.style.display = showPin ? '' : 'none';
   if (mpPin)  mpPin.style.display  = showPin ? '' : 'none';
+  // Feriados — solo para administrador
+  const navFer = document.getElementById('nav-feriados');
+  const mpFer  = document.getElementById('mpanel-feriados');
+  if (navFer) navFer.style.display = showPin ? '' : 'none';
+  if (mpFer)  mpFer.style.display  = showPin ? '' : 'none';
 }
 
 // Guard functions using permissions
@@ -3354,6 +3377,49 @@ function updateMobilePanelUser() {
   if (rl) rl.textContent = labels[currentUsuario.rol] || '';
 }
 
+// ── FERIADOS ────────────────────────────────────────────
+function openFeriados() {
+  const body = document.getElementById('feriados-modal-body');
+  if (!body) return;
+
+  const años = [2026, 2027, 2028, 2029, 2030];
+  const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                 'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+  let html = '';
+  años.forEach(y => {
+    // Get all feriados for this year
+    const feriadosAño = Object.entries(FERIADOS_CHILE)
+      .filter(([k]) => k.startsWith(String(y)))
+      .sort(([a],[b]) => a.localeCompare(b));
+
+    html += `<div style="margin-bottom:20px">
+      <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+        color:var(--text2);padding:6px 0 8px;border-bottom:2px solid var(--gb-blue);margin-bottom:8px">
+        ${y} — ${feriadosAño.length} feriados
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">`;
+
+    feriadosAño.forEach(([fecha, nombre]) => {
+      const [,m,d] = fecha.split('-');
+      const mesNombre = MESES[parseInt(m)-1];
+      const diaSemana = new Date(fecha).toLocaleDateString('es-CL',{weekday:'long'});
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:7px 10px;
+        border-radius:7px;background:var(--panel2);border:1px solid var(--border)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--gb-blue);
+          font-weight:700;min-width:70px">${d} ${mesNombre}</span>
+        <span style="font-size:0.72rem;color:var(--text2);min-width:70px;text-transform:capitalize">${diaSemana}</span>
+        <span style="font-size:0.82rem;font-weight:600;color:var(--text)">🇨🇱 ${nombre}</span>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  body.innerHTML = html;
+  openModal('modal-feriados');
+}
+
 function cerrarSesion() {
   closeMobilePanel();
   if (!confirm('¿Cerrar sesión?')) return;
@@ -3369,8 +3435,8 @@ function cerrarSesion() {
   document.querySelectorAll('.nav-item').forEach(n => n.style.display = '');
 
   // Reset all nav items to default visibility (applyPermisos will set correct state after next login)
-  ['nav-usuarios','nav-cambiar-pin','nav-historial',
-   'mpanel-usuarios','mpanel-cambiar-pin','mpanel-historial','mpanel-exportar'].forEach(id => {
+  ['nav-usuarios','nav-cambiar-pin','nav-historial','nav-feriados',
+   'mpanel-usuarios','mpanel-cambiar-pin','mpanel-historial','mpanel-exportar','mpanel-feriados'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none'; // hidden by default, applyPermisos shows them
   });
@@ -3441,7 +3507,8 @@ function lockViewerMode() {
     button[onclick*="deleteEmp"], button[onclick*="saveEmployee"],
     button[onclick*="confirmFechaEfectiva"],
     #nav-usuarios, #mpanel-usuarios,
-    #nav-cambiar-pin, #mpanel-cambiar-pin { display: none !important; }
+    #nav-cambiar-pin, #mpanel-cambiar-pin,
+    #nav-feriados, #mpanel-feriados { display: none !important; }
   `;
   document.head.appendChild(style);
   addSidebarNotice('Acceso de solo lectura');
