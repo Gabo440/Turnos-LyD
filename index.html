@@ -2735,6 +2735,22 @@ function confirmFechaEfectiva() {
   // Guardar snapshot a partir de este mes (meses anteriores quedan intactos)
   saveSnapshot(fromYear, fromMonth, descripcion);
 
+  // Actualizar snapshots futuros con los nuevos datos del empleado
+  // Sin esto, un cambio de turno fijo no se refleja en meses ya snapshotted
+  const mesEditado = fromYear * 100 + fromMonth;
+  state.snapshots = state.snapshots.map(s => {
+    if (s.year * 100 + s.month >= mesEditado) {
+      return {
+        ...s,
+        employees:    JSON.parse(JSON.stringify(state.employees)),
+        cycleOffsets: JSON.parse(JSON.stringify(state.cycleOffsets))
+      };
+    }
+    return s;
+  });
+
+  pushToFirestore();
+
   state.pendingEmpData = null;
   state.editingId = null;
   closeModal('modal-fechaefectiva');
